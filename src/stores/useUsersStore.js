@@ -58,34 +58,39 @@ export const useUsersStore = () => {
    * @param {number} userId - The ID of the user whose document is being updated
    * @param {string} title - The title of the document being updated
    */
-  const handleFileChange = (event, userId, title) => {
-    const selectedFile = event.target.files[0];
+const handleFileChange = (event, userId, title) => {
+  const selectedFile = event.target.files[0];
 
-    console.log("Selected file:", selectedFile);
+  console.log("Selected file:", selectedFile);
 
-    const updateDocument = (doc) => {
-      if (doc.title === title) {
+  // Create a URL for the selected file to enable downloading later
+  const fileURL = selectedFile ? URL.createObjectURL(selectedFile) : null;
+
+  const updateDocument = (doc) => {
+    if (doc.title === title) {
+      return {
+        ...doc,
+        fileName: selectedFile ? selectedFile.name : "Upload file",
+        isUploaded: !!selectedFile,
+        fileURL: fileURL, // Store the file URL for downloading
+      };
+    }
+    return doc;
+  };
+
+  setUsers((prevUsers) =>
+    prevUsers.map((user) => {
+      if (user.id === userId) {
         return {
-          ...doc,
-          fileName: selectedFile ? selectedFile.name : "Upload file",
-          isUploaded: !!selectedFile,
+          ...user,
+          documents: user.documents.map(updateDocument),
         };
       }
-      return doc;
-    };
+      return user;
+    })
+  );
+};
 
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => {
-        if (user.id === userId) {
-          return {
-            ...user,
-            documents: user.documents.map(updateDocument),
-          };
-        }
-        return user;
-      })
-    );
-  };
 
   /**
    * Returns all the user data

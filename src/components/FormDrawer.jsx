@@ -556,7 +556,7 @@ export function FormDrawer({ userId }) {
                           {doc.fileName === "Upload file" ? (
                             <i className="fa-solid fa-square-plus fa-xl"></i>
                           ) : (
-                            <a href="#" download>
+                            <a href={doc.fileURL} download={doc.fileName}>
                               <i className="fa-solid fa-file-arrow-up ml-2"></i>
                             </a>
                           )}
