@@ -19,15 +19,18 @@ import {
   cardNumberValidator,
   googleMapsUrlValidator,
 } from "../utils/validators";
+import FileUploader from "./FileUploader";
 
 export function FormDrawer({ userId }) {
+  const store = useUsersStore();
   const {
     getByID,
     getGuildList,
     getMarraigeYearsOptions,
     getCities,
     getBaghdadAreas,
-  } = useUsersStore();
+    mockData,
+  } = store;
   const [open, setOpen] = React.useState(false);
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
@@ -45,10 +48,18 @@ export function FormDrawer({ userId }) {
     const user = getByID(userId);
     setCurrentUser(user);
   }, []);
-
+  useEffect(() => {
+    console.log(store.mockData.find((user) => user.id === userId).documents);
+  }, []);
   const onSubmit = async (data) => {
     console.log(data);
     // TODO: Reset form
+  };
+  const [fileName, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setSelectedFile(selectedFile ? selectedFile.name : "Choose File");
   };
 
   return (
@@ -515,6 +526,80 @@ export function FormDrawer({ userId }) {
                     {errors.house?.message}
                   </Typography>
                 )}
+              </div>
+            </div>
+
+            <div>
+              <Typography variant="h5" className="font-heading font-meduim">
+                المستمسكات{" "}
+              </Typography>
+
+              <Typography className="font-heading font-light text-[#8F9397]">
+                يمكن مراجعة وتعديل المستمسكات الخاصة بالمستخدمين
+              </Typography>
+
+              {/* First row */}
+              <div className="responsive-four-cols-per-row bg-[#F3F6F8] mt-3 rounded">
+                {store.users
+                  .find((user) => user.id === userId)
+                  .documents?.map((doc, index) => (
+                    <div className="my-2" key={index}>
+                      <Typography className="font-heading font-light m-2">
+                        {doc.title}
+                      </Typography>
+                      <div className="flex items-center bg-white m-2">
+                        <label
+                          htmlFor={`file-upload-${index}`}
+                          className="w-full cursor-pointer flex items-center justify-center border rounded py-3 px-4"
+                        >
+                          <span className="ml-2">{doc.fileName}</span>
+                          {doc.fileName === "Upload file" ? (
+                            <i className="fa-solid fa-square-plus fa-xl"></i>
+                          ) : (
+                            <a href="#" download>
+                              <i className="fa-solid fa-file-arrow-up ml-2"></i>
+                            </a>
+                          )}
+                        </label>
+                        <input
+                          id={`file-upload-${index}`}
+                          type="file"
+                          className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer z-20" // Ensure higher z-index here
+                          onChange={(e) => {
+                            store.handleFileChange(e, userId, doc.title);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                {/* <Typography className="font-heading font-light m-2">
+                  {" "}
+                  الهوية الموحدة (الوجه الاول)
+                </Typography>
+
+                <div className="flex items-center bg-white m-2">
+                  <label
+                    for="file-upload"
+                    class="w-full cursor-pointer flex items-center justify-center border rounded py-3 px-4 "
+                  >
+                    <span className="ml-2">{fileName}</span>
+                    {fileName === "Upload file" ? (
+                      // Show download icon if file was uploaded
+                      <i class="fa-solid fa-square-plus fa-xl"></i>
+                    ) : (
+                      // Show upload file icon if file was not uploaded yet
+                      <a href="#" download>
+                        <i className="fa-solid fa-file-arrow-up ml-2"></i>
+                      </a>
+                    )}
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    onChange={handleFileChange}
+                  />
+                </div> */}
               </div>
             </div>
 

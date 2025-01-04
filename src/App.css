@@ -9,3 +9,4 @@
 .responsive-four-cols-per-row {
   @apply grid md:grid-cols-4 lg:grid-cols-4 sm:grid-cols-1  gap-4 items-center;
 }
+

@@ -1,4 +1,10 @@
+import React from "react";
+
+/**
+ * Custom hook for managing user data and documents
+ */
 export const useUsersStore = () => {
+  // Mock data representing user records
   const mockData = Array.from({ length: 5 }, (_, id) => ({
     id: id,
     userName: "محمد حمادي احمد الاحمدي",
@@ -18,17 +24,93 @@ export const useUsersStore = () => {
     neighborhood: "",
     alley: "",
     house: "",
-    documents: [],
+    documents: [
+      {
+        title: "الهوية الموحدة (الوجه الاول)",
+        fileName: "Upload file", // Default placeholder file name
+        isUploaded: false, // Indicates whether the file has been uploaded
+      },
+      {
+        title: "الهوية الموحدة (الوجه 2)",
+        fileName: "Upload file",
+        isUploaded: false,
+      },
+      {
+        title: "الهوية الموحدة (الوجه 3)",
+        fileName: "Upload file",
+        isUploaded: false,
+      },
+      {
+        title: "الهوية الموحدة (الوجه43)",
+        fileName: "Upload file",
+        isUploaded: false,
+      },
+    ],
   }));
+
+  // State to store users data
+  const [users, setUsers] = React.useState(mockData);
+
+  /**
+   * Handles file changes when a user uploads a document
+   *
+   * @param {object} event - The change event from the file input
+   * @param {number} userId - The ID of the user whose document is being updated
+   * @param {string} title - The title of the document being updated
+   */
+  const handleFileChange = (event, userId, title) => {
+    const selectedFile = event.target.files[0];
+
+    console.log("Selected file:", selectedFile);
+
+    const updateDocument = (doc) => {
+      if (doc.title === title) {
+        return {
+          ...doc,
+          fileName: selectedFile ? selectedFile.name : "Upload file",
+          isUploaded: !!selectedFile,
+        };
+      }
+      return doc;
+    };
+
+    setUsers((prevUsers) =>
+      prevUsers.map((user) => {
+        if (user.id === userId) {
+          return {
+            ...user,
+            documents: user.documents.map(updateDocument),
+          };
+        }
+        return user;
+      })
+    );
+  };
+
+  /**
+   * Returns all the user data
+   *
+   * @returns {array} - Array of all user records
+   */
   const getAll = () => {
     return mockData;
   };
 
+  /**
+   * Returns a user record by their ID
+   *
+   * @param {number} id - The ID of the user to fetch
+   * @returns {object|null} - The user record with the matching ID or null if not found
+   */
   const getByID = (id) => {
-    return mockData.find((record) => record.id === id);
+    return mockData.find((record) => record.id === id) || null;
   };
 
-
+  /**
+   * Returns a list of guild names
+   *
+   * @returns {array} - List of guilds
+   */
   const getGuildList = () => {
     return [
       "نقابة المهندسين",
@@ -41,9 +123,21 @@ export const useUsersStore = () => {
       "نقابة العاملين بالتكنولوجيا",
     ];
   };
+
+  /**
+   * Returns options for marriage years
+   *
+   * @returns {array} - List of marriage year options
+   */
   const getMarraigeYearsOptions = () => {
     return ["اقل من سنة", "سنة واحدة", "اكثر من سنة", "اكثر من ٥ سنوات"];
   };
+
+  /**
+   * Returns a list of cities
+   *
+   * @returns {array} - List of cities
+   */
   const getCities = () => {
     return [
       "بغداد",
@@ -56,6 +150,12 @@ export const useUsersStore = () => {
       "الموصل",
     ];
   };
+
+  /**
+   * Returns a list of areas in Baghdad
+   *
+   * @returns {array} - List of Baghdad areas
+   */
   const getBaghdadAreas = () => {
     return [
       "الكرادة",
@@ -78,5 +178,8 @@ export const useUsersStore = () => {
     getMarraigeYearsOptions,
     getCities,
     getBaghdadAreas,
+    mockData,
+    handleFileChange,
+    users,
   };
 };
