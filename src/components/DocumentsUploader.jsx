@@ -34,7 +34,7 @@ export const DocumentUploader = ({ userId }) => {
                 className="w-[100%] cursor-pointer flex items-center justify-center border rounded py-2 px-4"
               >
                 <span className="ml-2">{doc.fileName}</span>
-                {doc.fileName === "Upload file" ? (
+                {!doc.isUploaded ? (
                   <i className="fa-solid fa-file-arrow-up ml-2"></i>
                 ) : (
                   <a href={doc.fileURL} download={doc.fileName}>
