@@ -15,17 +15,17 @@ export const useUsersStore = () => {
     code: `#8720864272${id}`,
     workEmail: `ahaa${id}@tamata.com`,
     age: 20,
-    salary: "900,000",
-    cardNumber: "2333311",
+    salary: "900000",
+    cardNumber: "122222222222",
     guild: "حقوق العمال",
     socialStatus: "Married",
     marraigeYears: 4,
     city: "Baghdad",
     area: "Mansour",
-    mapLink: "https://maps.app.goo.gl/2Bu6Jx61bGFoU26e9",
-    neighborhood: "",
-    alley: "",
-    house: "",
+    mapLink: "https://www.google.com/maps/place/Eiffel+Tower/",
+    neighborhood: "420",
+    alley: "13",
+    house: "77",
     documents: [
       {
         title: "الهوية الموحدة (الوجه الاول)",
@@ -81,11 +81,10 @@ export const useUsersStore = () => {
         isUploaded: false,
       },
     ],
-    additionalDocuments: [
-    ],
+    additionalDocuments: [],
   }));
 
-  const TABLE_HEADERS = ["الاسم", "العمر", "رقم الهاتف",""];
+  const TABLE_HEADERS = ["الاسم", "العمر", "رقم الهاتف", ""];
   /**
    * Returns all the user data
    *
@@ -93,6 +92,20 @@ export const useUsersStore = () => {
    */
   const getAll = () => {
     return mockData;
+  };
+
+  /**
+   * Updates phone number the user data
+   */
+  const updatePhoneNumber = (id, updatedData) => {
+    setUsers((prevUsers) =>
+      prevUsers.map(
+        (user) =>
+          user.id === id
+            ? { ...user, ...updatedData } // Merge updated data for the matching user
+            : user // Keep the user unchanged if the id doesn't match
+      )
+    );
   };
 
   // State to store users data
@@ -312,6 +325,7 @@ export const useUsersStore = () => {
     addAdditionalDocument,
     setCurrentUser,
     currentUser,
-     TABLE_HEADERS,
+    TABLE_HEADERS,
+    updatePhoneNumber,
   };
 };

@@ -100,7 +100,7 @@ export default function Home() {
                       <td className={classes}>
                         <Typography
                           variant="small"
-                          className="font-heading"
+                          className="font-heading text-primary cursor-pointer"
                           onClick={() => openDrawer(id)} // Open the drawer for the specific row
                         >
                           تعديل المعلومات

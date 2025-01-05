@@ -10,6 +10,7 @@ import {
 } from "@material-tailwind/react";
 import { useUsersStore } from "../../stores/users";
 import { useForm } from "react-hook-form";
+import { PhoneNumberModal } from "./PhoneNumberModal";
 import {
   phoneValidator,
   requiredText,
@@ -33,6 +34,7 @@ export function FormDrawer({ userId, open, setOpen }) {
   } = store;
   const closeDrawer = () => setOpen(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
 
   // React Hook Form initialization
   const {
@@ -46,8 +48,22 @@ export function FormDrawer({ userId, open, setOpen }) {
     const user = getByID(userId); // Fetch the updated user based on userId
     setCurrentUser(user);
     if (user) {
-      // // If in edit mode, refill the fields values
-      // setValue("email",currentUser.email)
+      // If in edit mode, refill the fields values
+      setValue("email", user.email);
+      setValue("code", user.code);
+      setValue("phoneNumber", user.phoneNumber);
+      setValue("age", user.age);
+      setValue("salary", user.salary);
+      setValue("cardNumber", user.cardNumber);
+      setValue("guild", user.guild);
+      setValue("socialStatus", user.socialStatus);
+      setValue("marraigeYears", user.marraigeYears);
+      setValue("city", user.city);
+      setValue("area", user.area);
+      setValue("mapLink", user.mapLink);
+      setValue("neighborhood", user.neighborhood);
+      setValue("alley", user.alley);
+      setValue("house", user.house);
     }
   }, [store.users, userId]); // Re-run the effect whenever users or userId changes
 
@@ -56,11 +72,18 @@ export function FormDrawer({ userId, open, setOpen }) {
     // TODO: Reset form
   };
 
+  // Callback function to update phone number
+  const handlePhoneNumberChange = (newPhoneNumber) => {
+    setCurrentUser((prevData) => ({
+      ...prevData,
+      phoneNumber: newPhoneNumber,
+    }));
+    setValue("phoneNumber", newPhoneNumber); // Update form field
+  };
+
   return (
     currentUser && (
       <div className="flex items-center justify-center">
-        {console.log('Passed ID',userId)}
-
         <Drawer
           open={open}
           onClose={closeDrawer}
@@ -109,7 +132,10 @@ export function FormDrawer({ userId, open, setOpen }) {
                   <Typography className="font-heading font-[400] text-primary">
                     {currentUser.phoneNumber}
                   </Typography>
-                  <IconButton variant="text">
+                  <IconButton
+                    variant="text"
+                    onClick={() => setIsPhoneModalOpen(true)}
+                  >
                     <i class="fa-regular fa-pen-to-square fa-xl"></i>
                   </IconButton>
                 </div>
@@ -268,7 +294,6 @@ export function FormDrawer({ userId, open, setOpen }) {
                   رقم بطاقة الهوية الموحدة
                 </Typography>
                 <Input
-                  name="cardNumber"
                   {...register("cardNumber", cardNumberValidator)}
                   type="text"
                   label="رقم بطاقة الهوية الموحدة"
@@ -507,7 +532,7 @@ export function FormDrawer({ userId, open, setOpen }) {
                   الدار
                 </Typography>
                 <Input
-                  name="house"
+                  placeholder="house"
                   {...register("house", requiredText)}
                   type="text"
                   label="الدار"
@@ -538,6 +563,13 @@ export function FormDrawer({ userId, open, setOpen }) {
                 حفظ التعديلات
               </Button>
             </div>
+
+            <PhoneNumberModal
+              userId={userId}
+              open={isPhoneModalOpen}
+              setOpen={setIsPhoneModalOpen}
+              onPhoneNumberChange={handlePhoneNumberChange}
+            />
           </form>
         </Drawer>
       </div>
