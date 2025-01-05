@@ -26,6 +26,7 @@ export const useUsersStore = () => {
     neighborhood: "420",
     alley: "13",
     house: "77",
+    active: true,
     documents: [
       {
         title: "الهوية الموحدة (الوجه الاول)",
@@ -93,6 +94,18 @@ export const useUsersStore = () => {
   const getAll = () => {
     return mockData;
   };
+
+  /**
+   * Updates the user data
+   */
+  const update = (id, updatedData) => {
+    setUsers((prevUsers) =>
+      prevUsers.map(
+        (user) => (user.id === id ? updatedData : user) // Replace the entire user object if the id matches
+      )
+    );
+  };
+  
 
   /**
    * Updates phone number the user data
@@ -327,5 +340,6 @@ export const useUsersStore = () => {
     currentUser,
     TABLE_HEADERS,
     updatePhoneNumber,
+    update,
   };
 };

@@ -184,9 +184,9 @@ export const PhoneNumberModal = ({
         )}
         <DialogFooter>
           <Button
-            className="w-full bg-black"
+            className="w-full bg-black font-heading"
             onClick={() => {
-                onPhoneNumberChange(submittedData.newPhoneNumber);
+              onPhoneNumberChange(submittedData.newPhoneNumber);
               setNextModalOpen(false);
             }}
           >

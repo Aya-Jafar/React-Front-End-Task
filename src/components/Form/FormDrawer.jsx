@@ -11,6 +11,7 @@ import {
 import { useUsersStore } from "../../stores/users";
 import { useForm } from "react-hook-form";
 import { PhoneNumberModal } from "./PhoneNumberModal";
+import { ConfirmationModal } from "./ConfirmationModal";
 import {
   phoneValidator,
   requiredText,
@@ -35,6 +36,8 @@ export function FormDrawer({ userId, open, setOpen }) {
   const closeDrawer = () => setOpen(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
+  const [showConfirmModal, setConfirmModal] = useState(false);
+  const [tempData, setTempData] = useState(null); // Temporary storage for form data
 
   // React Hook Form initialization
   const {
@@ -67,11 +70,24 @@ export function FormDrawer({ userId, open, setOpen }) {
     }
   }, [store.users, userId]); // Re-run the effect whenever users or userId changes
 
+
   const onSubmit = async (data) => {
-    console.log(data);
-    // TODO: Reset form
+    // Store the form data temporarily
+    setTempData(data);
+
+    // Show the confirmation modal
+    setConfirmModal(true);
   };
 
+  const handleConfirmUpdate = () => {
+    if (tempData) {
+      // Update the user with the temporarily stored data
+      store.update(currentUser.id, tempData);
+
+      // Clear temporary data after the update
+      setTempData(null);
+    }
+  };
   // Callback function to update phone number
   const handlePhoneNumberChange = (newPhoneNumber) => {
     setCurrentUser((prevData) => ({
@@ -569,6 +585,12 @@ export function FormDrawer({ userId, open, setOpen }) {
               open={isPhoneModalOpen}
               setOpen={setIsPhoneModalOpen}
               onPhoneNumberChange={handlePhoneNumberChange}
+            />
+
+            <ConfirmationModal
+              open={showConfirmModal}
+              setOpen={setConfirmModal}
+              onConfirm={handleConfirmUpdate}
             />
           </form>
         </Drawer>
