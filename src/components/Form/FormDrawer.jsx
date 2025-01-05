@@ -70,7 +70,6 @@ export function FormDrawer({ userId, open, setOpen }) {
     }
   }, [store.users, userId]); // Re-run the effect whenever users or userId changes
 
-
   const onSubmit = async (data) => {
     // Store the form data temporarily
     setTempData(data);
