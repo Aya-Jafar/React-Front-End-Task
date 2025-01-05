@@ -7,6 +7,7 @@ import {
   Input,
   Select,
   Option,
+  Alert,
 } from "@material-tailwind/react";
 import { useUsersStore } from "../../stores/users";
 import { useForm } from "react-hook-form";
@@ -20,6 +21,7 @@ import {
   cardNumberValidator,
   googleMapsUrlValidator,
 } from "../../utils/validators";
+import { handleFieldCopy } from "../../utils/helpers";
 import { DocumentUploader } from "./DocumentsUploader";
 import { AdditionalDocuments } from "./AdditionalDocuments";
 
@@ -31,13 +33,17 @@ export function FormDrawer({ userId, open, setOpen }) {
     getMarraigeYearsOptions,
     getCities,
     getBaghdadAreas,
-    mockData,
   } = store;
-  const closeDrawer = () => setOpen(false);
+
+  // States
   const [currentUser, setCurrentUser] = useState(null);
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
   const [showConfirmModal, setConfirmModal] = useState(false);
   const [tempData, setTempData] = useState(null); // Temporary storage for form data
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+
+  const closeDrawer = () => setOpen(false);
 
   // React Hook Form initialization
   const {
@@ -48,7 +54,7 @@ export function FormDrawer({ userId, open, setOpen }) {
   } = useForm();
 
   useEffect(() => {
-    const user = getByID(userId); // Fetch the updated user based on userId
+    const user = getByID(userId); // Get the updated user based on userId
     setCurrentUser(user);
     if (user) {
       // If in edit mode, refill the fields values
@@ -78,6 +84,10 @@ export function FormDrawer({ userId, open, setOpen }) {
     setConfirmModal(true);
   };
 
+  
+  /**
+   * Callback function to update user 
+   */
   const handleConfirmUpdate = () => {
     if (tempData) {
       // Update the user with the temporarily stored data
@@ -87,7 +97,10 @@ export function FormDrawer({ userId, open, setOpen }) {
       setTempData(null);
     }
   };
-  // Callback function to update phone number
+
+  /**
+   * Callback function to update phone number from modal
+   */
   const handlePhoneNumberChange = (newPhoneNumber) => {
     setCurrentUser((prevData) => ({
       ...prevData,
@@ -235,40 +248,63 @@ export function FormDrawer({ userId, open, setOpen }) {
 
             {/* Second Row */}
             <div className="responsive-four-cols-per-row">
-              {/* Column 1: الرمز */}
-              <div>
+              {/* Column 1: البريد */}
+              <div className="relative w-full">
                 <Typography color="blue-gray" className="font-heading">
                   البريد الالكتروني الخاص بالعمل
                 </Typography>
-                <Input
-                  name="email"
-                  {...register("email", emailValidator)}
-                  type="text"
-                  label="البريد الالكتروني الخاص بالعمل"
-                  error={!!errors?.email}
-                />
-                {errors.email && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading mt-1"
+                <div className="relative">
+                  <span
+                    className="absolute inset-y-0 left-3 flex items-center text-blue-gray cursor-pointer z-10"
+                    onClick={() =>
+                      handleFieldCopy("email", setToastOpen, setToastMessage)
+                    }
                   >
-                    {errors.email?.message}
-                  </Typography>
-                )}
+                    <i class="fa-regular fa-copy cursor-pointer"></i>
+                  </span>
+                  <Input
+                    name="email"
+                    {...register("email", emailValidator)}
+                    type="text"
+                    label="البريد الالكتروني الخاص بالعمل"
+                    error={!!errors?.email}
+                  />
+                  {errors.email && (
+                    <Typography
+                      variant="small"
+                      color="red"
+                      className="font-heading mt-1"
+                    >
+                      {errors.email?.message}
+                    </Typography>
+                  )}
+                </div>
               </div>
+
               {/* Column 2: العمر */}
-              <div>
+              <div className="relative w-full">
+                {/* Copy icon */}
                 <Typography color="blue-gray" className="font-heading">
                   العمر
                 </Typography>
-                <Input
-                  name="age"
-                  {...register("age", numericValidator)}
-                  type="text"
-                  label="العمر"
-                  error={!!errors?.age}
-                />
+                <div className="relative">
+                  <span
+                    className="absolute inset-y-0 left-3 flex items-center text-blue-gray cursor-pointer z-10"
+                    onClick={() =>
+                      handleFieldCopy("age", setToastOpen, setToastMessage)
+                    }
+                  >
+                    <i class="fa-regular fa-copy cursor-pointer"></i>
+                  </span>
+                  <Input
+                    name="age"
+                    {...register("age", numericValidator)}
+                    type="text"
+                    label="العمر"
+                    className="pl-10"
+                    error={!!errors?.age}
+                  />
+                </div>
                 {errors.age && (
                   <Typography
                     variant="small"
@@ -591,6 +627,13 @@ export function FormDrawer({ userId, open, setOpen }) {
               setOpen={setConfirmModal}
               onConfirm={handleConfirmUpdate}
             />
+
+            {/* Toast for copy feedback */}
+            {toastOpen && (
+              <div className="fixed top-4 left-1/2 transform -translate-x-1/2 flex w-auto flex-col gap-2 z-50 capitalize">
+                <Alert color="blue">{toastMessage}</Alert>
+              </div>
+            )}
           </form>
         </Drawer>
       </div>
