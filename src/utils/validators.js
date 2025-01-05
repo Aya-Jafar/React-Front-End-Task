@@ -48,7 +48,7 @@ export const emailValidator = {
 
 /**
  * Validator for numeric fields.
- * 
+ *
  * @type {Object}
  */
 export const numericValidator = {
@@ -60,20 +60,18 @@ export const numericValidator = {
   },
 };
 
-
 /**
  * Validator for required text fields.
- * 
+ *
  * @type {Object}
  */
 export const requiredText = {
   required: "هذا الحقل مطلوب",
 };
 
-
 /**
  * Validator for card number fields (12 digits).
- * 
+ *
  * @type {Object}
  */
 export const cardNumberValidator = {
@@ -90,4 +88,33 @@ export const cardNumberValidator = {
     value: 12,
     message: "رقم بطاقة الهوية الموحدة يجب أن يكون 12 رقمًا",
   },
+};
+
+/**
+ * Validates the selected file based on size and type
+ *
+ * @param {File} selectedFile - The file selected by the user
+ * @param {Array} docs - The list of existing documents to check for duplicates
+ * @returns {boolean} - Returns true if the file is valid, otherwise false
+ */
+
+export const validateFile = (selectedFile) => {
+  const MAX_FILE_SIZE = 10485760; // For file size validation
+
+  // File size validation
+  if (selectedFile.size > MAX_FILE_SIZE) {
+    alert("File size exceeds the limit!");
+    return false;
+  }
+
+  // File type validation (only image or PDF allowed)
+  if (
+    !selectedFile.type.startsWith("image/") &&
+    selectedFile.type !== "application/pdf"
+  ) {
+    alert("Only upload image files or PDF documents");
+    return false;
+  }
+
+  return true;
 };

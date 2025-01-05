@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { validateFile } from "../utils/validators";
 
 /**
  * Store for managing user data and documents
@@ -8,7 +9,6 @@ export const useUsersStore = () => {
    * Constants
    * */
   const TABLE_HEADERS = ["الاسم", "العمر", "رقم الهاتف", ""];
-  const MAX_FILE_SIZE = 10485760; // For file size validation
 
   // Helper function to generate document structure
   const generateInitialDocuments = () =>
@@ -171,11 +171,10 @@ export const useUsersStore = () => {
   ) => {
     const selectedFile = event.target.files[0];
 
-    // Validate the size of the file
-    if (selectedFile.size > MAX_FILE_SIZE) {
-      alert("File size exceeds the limit!");
-      return;
-    }
+    // Validate file
+    const isValidFile = validateFile(selectedFile);
+    if (!isValidFile) return;
+
     // Create a URL for the selected file to enable downloading later
     const fileURL = selectedFile ? URL.createObjectURL(selectedFile) : null;
 
