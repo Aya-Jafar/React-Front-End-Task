@@ -18,8 +18,8 @@ import {
   cardNumberValidator,
   googleMapsUrlValidator,
 } from "../utils/validators";
-import { DocumentUploader } from "./DocumentsUploader";
-import { AdditionalDocuments } from "./AdditionalDocuments";
+import { DocumentUploader } from "./Form/DocumentsUploader";
+import { AdditionalDocuments } from "./Form/AdditionalDocuments";
 
 export function FormDrawer({ userId }) {
   const store = useUsersStore();
@@ -35,7 +35,6 @@ export function FormDrawer({ userId }) {
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const additionalDocumentsInputRef = useRef(null);
 
   // React Hook Form initialization
   const {
@@ -48,6 +47,10 @@ export function FormDrawer({ userId }) {
   useEffect(() => {
     const user = getByID(userId); // Fetch the updated user based on userId
     setCurrentUser(user);
+    if (user) {
+      // // If in edit mode, refill the fields values
+      // setValue("email",currentUser.email)
+    }
   }, [store.users, userId]); // Re-run the effect whenever users or userId changes
 
   const onSubmit = async (data) => {

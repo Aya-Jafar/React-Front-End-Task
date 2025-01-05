@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useUsersStore } from "../stores/users";
+import { useUsersStore } from "../../stores/users";
 import { Typography } from "@material-tailwind/react";
 
 export const DocumentUploader = ({ userId }) => {
