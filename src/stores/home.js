@@ -1,4 +1,9 @@
+/**
+ * Store for managing home data
+ */
+
 export const useHomeStore = () => {
+  
   const getProfileData = () => {
     return {
       userName: "علي احمد",

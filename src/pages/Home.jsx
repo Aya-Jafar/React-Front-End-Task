@@ -8,7 +8,7 @@ const Home = () => {
   const store = useUsersStore();
   const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null); // Track selected user ID
-  const [open, setOpen] = useState(false); 
+  const [open, setOpen] = useState(false);
   const { getAll } = store;
 
   useEffect(() => {
@@ -29,7 +29,6 @@ const Home = () => {
 
   return (
     <>
-      {/* <div onClick={() => setOpen(true)}>click</div> */}
       {selectedUserId !== null && (
         <FormDrawer
           userId={selectedUserId}
@@ -39,6 +38,7 @@ const Home = () => {
         />
       )}
 
+      {/* Data table for users */}
       {store.users && (
         <Card className="h-full w-full overflow-scroll">
           <table className="w-full min-w-max table-auto text-right" dir="rtl">
