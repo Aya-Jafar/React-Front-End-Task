@@ -7,7 +7,6 @@ const Home = React.lazy(() => import("../pages/Home"));
 
 /**
  * LayoutBuilder is a reusable layout container that can structure the page.
- * It can include the header (Nav), main content, and other sections.
  *
  * @param {React.ReactNode} children - The content to render inside the layout.
  * @param {string} activeTab - The currently active tab.
@@ -19,8 +18,6 @@ export const LayoutBuilder = ({ children, activeTab, setActiveTab }) => {
     switch (activeTab) {
       case "subscribers":
         return <Home />;
-      case "sponsors":
-        return <h1>sponsors page</h1>;
       default:
         return <h1>Default Page</h1>;
     }
