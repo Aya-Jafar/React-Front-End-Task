@@ -2,8 +2,11 @@ import React from "react";
 import { Nav } from "../components/common/Nav";
 import { SideBar } from "../components/common/SideBar";
 
-// Lazy load components
+/**
+ *  Lazy load components
+ * */
 const Home = React.lazy(() => import("../pages/Home"));
+
 
 /**
  * LayoutBuilder is a reusable layout container that can structure the page.
@@ -13,7 +16,6 @@ const Home = React.lazy(() => import("../pages/Home"));
  * @param {function} setActiveTab - Function to change the active tab.
  */
 export const LayoutBuilder = ({ children, activeTab, setActiveTab }) => {
-  
   const generateTabContent = (activeTab) => {
     switch (activeTab) {
       case "subscribers":
