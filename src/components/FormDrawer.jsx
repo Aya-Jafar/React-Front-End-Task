@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Drawer,
   Button,
   Typography,
   IconButton,
   Input,
-  Textarea,
   Select,
   Option,
 } from "@material-tailwind/react";
-import { useUsersStore } from "../stores/useUsersStore";
+import { useUsersStore } from "../stores/users";
 import { useForm } from "react-hook-form";
 import {
   phoneValidator,
@@ -19,7 +18,8 @@ import {
   cardNumberValidator,
   googleMapsUrlValidator,
 } from "../utils/validators";
-import FileUploader from "./FileUploader";
+import { DocumentUploader } from "./DocumentsUploader";
+import { AdditionalDocuments } from "./AdditionalDocuments";
 
 export function FormDrawer({ userId }) {
   const store = useUsersStore();
@@ -35,6 +35,7 @@ export function FormDrawer({ userId }) {
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const additionalDocumentsInputRef = useRef(null);
 
   // React Hook Form initialization
   const {
@@ -45,21 +46,13 @@ export function FormDrawer({ userId }) {
   } = useForm();
 
   useEffect(() => {
-    const user = getByID(userId);
+    const user = getByID(userId); // Fetch the updated user based on userId
     setCurrentUser(user);
-  }, []);
-  useEffect(() => {
-    console.log(store.mockData.find((user) => user.id === userId).documents);
-  }, []);
+  }, [store.users, userId]); // Re-run the effect whenever users or userId changes
+
   const onSubmit = async (data) => {
     console.log(data);
     // TODO: Reset form
-  };
-  const [fileName, setSelectedFile] = useState(null);
-
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setSelectedFile(selectedFile ? selectedFile.name : "Choose File");
   };
 
   return (
@@ -80,7 +73,12 @@ export function FormDrawer({ userId }) {
         >
           <div className="px-4 pb-2">
             {/* Close Icon */}
-            <IconButton variant="text" color="blue-gray" onClick={closeDrawer}>
+            <IconButton
+              variant="text"
+              color="blue-gray"
+              onClick={closeDrawer}
+              className="mt-3"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -530,83 +528,14 @@ export function FormDrawer({ userId }) {
             </div>
 
             <div>
-              <Typography variant="h5" className="font-heading font-meduim">
-                المستمسكات{" "}
-              </Typography>
-
-              <Typography className="font-heading font-light text-[#8F9397]">
-                يمكن مراجعة وتعديل المستمسكات الخاصة بالمستخدمين
-              </Typography>
-
-              {/* First row */}
-              <div className="responsive-four-cols-per-row bg-[#F3F6F8] mt-3 rounded">
-                {store.users
-                  .find((user) => user.id === userId)
-                  .documents?.map((doc, index) => (
-                    <div className="my-2" key={index}>
-                      <Typography className="font-heading font-light m-2">
-                        {doc.title}
-                      </Typography>
-                      <div className="flex items-center bg-white m-2">
-                        <label
-                          htmlFor={`file-upload-${index}`}
-                          className="w-full cursor-pointer flex items-center justify-center border rounded py-3 px-4"
-                        >
-                          <span className="ml-2">{doc.fileName}</span>
-                          {doc.fileName === "Upload file" ? (
-                            <i className="fa-solid fa-square-plus fa-xl"></i>
-                          ) : (
-                            <a href={doc.fileURL} download={doc.fileName}>
-                              <i className="fa-solid fa-file-arrow-up ml-2"></i>
-                            </a>
-                          )}
-                        </label>
-                        <input
-                          id={`file-upload-${index}`}
-                          type="file"
-                          className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer z-20" // Ensure higher z-index here
-                          onChange={(e) => {
-                            store.handleFileChange(e, userId, doc.title);
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                {/* <Typography className="font-heading font-light m-2">
-                  {" "}
-                  الهوية الموحدة (الوجه الاول)
-                </Typography>
-
-                <div className="flex items-center bg-white m-2">
-                  <label
-                    for="file-upload"
-                    class="w-full cursor-pointer flex items-center justify-center border rounded py-3 px-4 "
-                  >
-                    <span className="ml-2">{fileName}</span>
-                    {fileName === "Upload file" ? (
-                      // Show download icon if file was uploaded
-                      <i class="fa-solid fa-square-plus fa-xl"></i>
-                    ) : (
-                      // Show upload file icon if file was not uploaded yet
-                      <a href="#" download>
-                        <i className="fa-solid fa-file-arrow-up ml-2"></i>
-                      </a>
-                    )}
-                  </label>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer z-10"
-                    onChange={handleFileChange}
-                  />
-                </div> */}
-              </div>
+              <DocumentUploader userId={userId} />
+              <AdditionalDocuments userId={userId} />
             </div>
 
             <div className="flex justify-end">
               <Button
                 type="submit"
-                className="md:w-[14%] sm:w-[20%] font-heading bg-primary"
+                className="md:w-[14%] sm:w-[20%] font-heading bg-primary text-md"
               >
                 حفظ التعديلات
               </Button>
