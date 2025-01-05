@@ -3,13 +3,9 @@ import { FormDrawer } from "../Form/FormDrawer";
 import React from "react";
 
 export const DataTable = ({ tableRows, tableHeaders }) => {
-  const [open, setOpen] = React.useState(false);
-  const openDrawer = () => setOpen(true);
-  const closeDrawer = () => setOpen(false);
-
   return (
     <Card className="h-full w-full overflow-scroll">
-      <table className="w-full min-w-max table-auto text-left">
+      <table className="w-full min-w-max table-auto text-right" dir="rtl">
         <thead>
           <tr>
             {tableHeaders.map((head) => (
@@ -30,8 +26,12 @@ export const DataTable = ({ tableRows, tableHeaders }) => {
         </thead>
         <tbody>
           {tableRows.map(({ id, userName, age, phoneNumber }, index) => {
+            const [open, setOpen] = React.useState(false); // Individual state per row
             const isLast = index === tableRows.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+
+            const openDrawer = () => setOpen(true);
+            const closeDrawer = () => setOpen(false);
 
             return (
               <tr key={id}>
@@ -64,17 +64,19 @@ export const DataTable = ({ tableRows, tableHeaders }) => {
                 </td>
                 <td className={classes}>
                   <Typography
-                    as="a"
-                    href="#"
                     variant="small"
-                    color="blue-gray"
-                    className="font-medium"
-                    onClick={openDrawer}
+                    className="font-heading"
+                    onClick={openDrawer} // Open the drawer for this row
                   >
-                    Edit
+                    تعديل المعلومات
                   </Typography>
-                <FormDrawer userId={id} open={open} setOpen={setOpen} />
                 </td>
+
+                <FormDrawer
+                  userId={id}
+                  open={open}
+                  setOpen={setOpen} // Close the drawer when needed
+                />
               </tr>
             );
           })}

@@ -47,10 +47,7 @@ export const SideBar = ({ activeTab, setActiveTab }) => {
           </Typography>
         </ListItem>
 
-        <ListItem
-          className={`gap-1 ${activeTab === "operations" ? "bg-gray-200" : ""}`}
-          onClick={() => setActiveTab("operations")}
-        >
+        <ListItem>
           <ListItemPrefix>
             <i className=""></i>
           </ListItemPrefix>

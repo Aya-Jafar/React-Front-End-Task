@@ -31,8 +31,6 @@ export function FormDrawer({ userId, open, setOpen }) {
     getBaghdadAreas,
     mockData,
   } = store;
-  // const [open, setOpen] = React.useState(false);
-  const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -61,10 +59,7 @@ export function FormDrawer({ userId, open, setOpen }) {
   return (
     currentUser && (
       <div className="flex items-center justify-center">
-        {/* Trigger button */}
-        {/* <Button onClick={openDrawer} className="mt-10">
-          <div>open form</div>
-        </Button> */}
+        {console.log('Passed ID',userId)}
 
         <Drawer
           open={open}
