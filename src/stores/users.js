@@ -82,13 +82,10 @@ export const useUsersStore = () => {
       },
     ],
     additionalDocuments: [
-      // {
-      //   title: "الهوية الموحدة (الوجه الاول)",
-      //   fileName: "Upload file", // Default placeholder file name
-      //   isUploaded: false, // Indicates whether the file has been uploaded
-      // },
     ],
   }));
+
+  const TABLE_HEADERS = ["الاسم", "العمر", "رقم الهاتف",""];
   /**
    * Returns all the user data
    *
@@ -315,5 +312,6 @@ export const useUsersStore = () => {
     addAdditionalDocument,
     setCurrentUser,
     currentUser,
+     TABLE_HEADERS,
   };
 };

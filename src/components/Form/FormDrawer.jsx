@@ -21,7 +21,7 @@ import {
 import { DocumentUploader } from "./DocumentsUploader";
 import { AdditionalDocuments } from "./AdditionalDocuments";
 
-export function FormDrawer({ userId }) {
+export function FormDrawer({ userId, open, setOpen }) {
   const store = useUsersStore();
   const {
     getByID,
@@ -31,7 +31,7 @@ export function FormDrawer({ userId }) {
     getBaghdadAreas,
     mockData,
   } = store;
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -62,9 +62,9 @@ export function FormDrawer({ userId }) {
     currentUser && (
       <div className="flex items-center justify-center">
         {/* Trigger button */}
-        <Button onClick={openDrawer} className="mt-10">
+        {/* <Button onClick={openDrawer} className="mt-10">
           <div>open form</div>
-        </Button>
+        </Button> */}
 
         <Drawer
           open={open}
