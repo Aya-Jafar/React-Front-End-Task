@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   Button,
@@ -11,7 +11,6 @@ import {
 } from "@material-tailwind/react";
 import { useUsersStore } from "../../stores/users";
 import { useForm } from "react-hook-form";
-import { PhoneNumberModal } from "./PhoneNumberModal";
 import { ConfirmationModal } from "./ConfirmationModal";
 import {
   phoneValidator,
@@ -24,8 +23,9 @@ import {
 import { handleFieldCopy } from "../../utils/helpers";
 import { DocumentUploader } from "./DocumentsUploader";
 import { AdditionalDocuments } from "./AdditionalDocuments";
+import { FieldEditModal } from "./FieldEditModal";
 
-export function FormDrawer({ userId, open, setOpen }) {
+export const FormDrawer = ({ userId, open, setOpen }) => {
   const store = useUsersStore();
   const {
     getByID,
@@ -38,6 +38,8 @@ export function FormDrawer({ userId, open, setOpen }) {
   // States
   const [currentUser, setCurrentUser] = useState(null);
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [isNameModalOpen, setIsNameModalOpen] = useState(false);
   const [showConfirmModal, setConfirmModal] = useState(false);
   const [tempData, setTempData] = useState(null); // Temporary storage for form data
   const [toastOpen, setToastOpen] = useState(false);
@@ -77,11 +79,9 @@ export function FormDrawer({ userId, open, setOpen }) {
   }, [store.users, userId]); // Re-run the effect whenever users or userId changes
 
   const onSubmit = async (data) => {
-    // Validate the phone number first or handle the phone modal state
-    if (isPhoneModalOpen) {
-      return; // Wait for the phone number modal interaction to complete
+    if (isPhoneModalOpen || isEmailModalOpen || isNameModalOpen) {
+      return; // To ensure that corfirm and edit modals are not opened togather
     }
-    
     // Store the form data temporarily
     setTempData(data);
 
@@ -106,16 +106,15 @@ export function FormDrawer({ userId, open, setOpen }) {
       setTempData(null);
     }
   };
-
   /**
-   * Callback function to update phone number from modal
+   * Callback function to update any field from modal
    */
-  const handlePhoneNumberChange = (newPhoneNumber) => {
+  const handleFieldChange = (fieldName, newValue) => {
     setCurrentUser((prevData) => ({
       ...prevData,
-      phoneNumber: newPhoneNumber,
+      [fieldName]: newValue,
     }));
-    setValue("phoneNumber", newPhoneNumber); // Update form field
+    setValue(fieldName, newValue); // Update form field in form
   };
 
   return (
@@ -157,7 +156,10 @@ export function FormDrawer({ userId, open, setOpen }) {
               <Typography variant="h5" className="font-heading font-bold">
                 {currentUser.userName}
               </Typography>
-              <IconButton variant="text">
+              <IconButton
+                variant="text"
+                onClick={() => setIsNameModalOpen(true)}
+              >
                 <i class="fa-regular fa-pen-to-square fa-xl"></i>
               </IconButton>
             </div>
@@ -181,7 +183,10 @@ export function FormDrawer({ userId, open, setOpen }) {
                   <Typography className="font-heading font-[400]">
                     {currentUser.email}
                   </Typography>
-                  <IconButton variant="text">
+                  <IconButton
+                    variant="text"
+                    onClick={() => setIsEmailModalOpen(true)}
+                  >
                     <i class="fa-regular fa-pen-to-square fa-xl"></i>
                   </IconButton>
                 </div>
@@ -624,14 +629,49 @@ export function FormDrawer({ userId, open, setOpen }) {
               </Button>
             </div>
 
-            <PhoneNumberModal
+            {/* Field edit modals */}
+
+            <FieldEditModal
               userId={userId}
+              fieldName="phoneNumber"
+              fieldLabel="رقم الهاتف"
+              fieldValidator={phoneValidator}
+              currentValue={currentUser.phoneNumber}
               open={isPhoneModalOpen}
               setOpen={setIsPhoneModalOpen}
-              onPhoneNumberChange={handlePhoneNumberChange}
+              onFieldChange={(newPhoneNumber) => {
+                handleFieldChange("phoneNumber", newPhoneNumber);
+              }}
             />
 
-            {showConfirmModal && !isPhoneModalOpen && (
+            <FieldEditModal
+              userId={userId}
+              fieldName="email"
+              fieldLabel="البريد الالكتروني"
+              fieldValidator={emailValidator}
+              currentValue={currentUser.email}
+              open={isEmailModalOpen}
+              setOpen={setIsEmailModalOpen}
+              onFieldChange={(newEmail) => {
+                handleFieldChange("email", newEmail);
+              }}
+            />
+
+            <FieldEditModal
+              userId={userId}
+              fieldName="userName"
+              fieldLabel="اسم المستخدم"
+              fieldValidator={requiredText}
+              currentValue={currentUser.userName}
+              open={isNameModalOpen}
+              setOpen={setIsNameModalOpen}
+              onFieldChange={(newName) => {
+                handleFieldChange("userName", newName);
+              }}
+            />
+
+            {/* Confirm modal after submit */}
+            {showConfirmModal && (
               <ConfirmationModal
                 open={showConfirmModal}
                 setOpen={setConfirmModal}
@@ -650,4 +690,4 @@ export function FormDrawer({ userId, open, setOpen }) {
       </div>
     )
   );
-}
+};

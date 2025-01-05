@@ -8,17 +8,19 @@ import {
   IconButton,
   Input,
 } from "@material-tailwind/react";
-import { phoneValidator, requiredText } from "../../utils/validators";
 import { useForm } from "react-hook-form";
-import { useUsersStore } from "../../stores/users";
+import { requiredText } from "../../utils/validators";
 
-export const PhoneNumberModal = ({
+export const FieldEditModal = ({
   userId,
+  fieldName,
+  fieldLabel,
+  fieldValidator,
+  currentValue,
   open,
   setOpen,
-  onPhoneNumberChange,
+  onFieldChange,
 }) => {
-  const store = useUsersStore();
   const [nextModalOpen, setNextModalOpen] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
 
@@ -29,28 +31,23 @@ export const PhoneNumberModal = ({
     setValue,
   } = useForm();
 
-  const onSubmit = async (data) => {
+  useEffect(() => {
+    setValue(fieldName, currentValue); // Set initial field value
+  }, [currentValue, setValue, fieldName]);
+
+  const onSubmit = (data) => {
     setSubmittedData((prevData) => ({
       ...prevData,
-      newPhoneNumber: data.phoneNumber, // Add new phone number
+      oldValue: currentValue,
+      newValue: data[fieldName], // Updated field value
     }));
-    setOpen(false); // Close the current modal
-    setNextModalOpen(true); // Open the confirmation modal
+    setOpen(false); // Close the edit modal
+    setNextModalOpen(true); // Open confirmation modal
   };
-
-  useEffect(() => {
-    const user = store.getByID(userId);
-    if (user) {
-      setSubmittedData((prevData) => ({
-        ...prevData,
-        oldPhoneNumber: user.phoneNumber, // Set oldPhoneNumber without overriding newPhoneNumber
-      }));
-    }
-  }, [userId]);
 
   return (
     <>
-      {/* First Modal */}
+      {/* Edit Modal */}
       <Dialog
         open={open}
         handler={() => setOpen(false)}
@@ -80,7 +77,7 @@ export const PhoneNumberModal = ({
         </IconButton>
         <div className="text-primary px-5">
           <Typography className="font-heading" variant="h5">
-            تعديل رقم الهاتف
+            تعديل {fieldLabel}
           </Typography>
         </div>
 
@@ -88,22 +85,22 @@ export const PhoneNumberModal = ({
           <form onSubmit={handleSubmit(onSubmit)}>
             <div>
               <Typography color="blue-gray" className="font-heading">
-                رقم الهاتف
+                {fieldLabel}
               </Typography>
               <Input
-                name="phoneNumber"
-                {...register("phoneNumber", phoneValidator)}
+                name={fieldName}
+                {...register(fieldName, fieldValidator)}
                 type="text"
-                label="رقم الهاتف"
-                error={!!errors.phoneNumber}
+                label={fieldLabel}
+                error={!!errors[fieldName]}
               />
-              {errors.phoneNumber && (
+              {errors[fieldName] && (
                 <Typography
                   variant="small"
                   color="red"
                   className="font-heading mt-1"
                 >
-                  {errors.phoneNumber?.message}
+                  {errors[fieldName]?.message}
                 </Typography>
               )}
             </div>
@@ -137,7 +134,7 @@ export const PhoneNumberModal = ({
         </DialogBody>
       </Dialog>
 
-      {/* Second Modal */}
+      {/* Confirmation Modal */}
       <Dialog
         open={nextModalOpen}
         handler={() => setNextModalOpen(false)}
@@ -166,18 +163,18 @@ export const PhoneNumberModal = ({
         </IconButton>
         <div className="px-5 mt-3 text-black">
           <Typography className="font-heading" variant="h5">
-            هل انت متأكد من تعديل رقم الهاتف ؟
+            هل انت متأكد من تعديل {fieldLabel}؟
           </Typography>
         </div>
         {submittedData && (
           <DialogBody className="font-heading">
             <div>
               <Typography className="font-heading">
-                رقم الهاتف الحالي: {submittedData.oldPhoneNumber}
+                {fieldLabel} الحالي: {submittedData.oldValue}
               </Typography>
 
               <Typography className="font-heading">
-                رقم الهاتف بعد التعديل: {submittedData.newPhoneNumber}
+                {fieldLabel} بعد التعديل: {submittedData.newValue}
               </Typography>
             </div>
           </DialogBody>
@@ -186,7 +183,7 @@ export const PhoneNumberModal = ({
           <Button
             className="w-full bg-black font-heading"
             onClick={() => {
-              onPhoneNumberChange(submittedData.newPhoneNumber);
+              onFieldChange(submittedData.newValue);
               setNextModalOpen(false);
             }}
           >
