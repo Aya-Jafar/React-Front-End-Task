@@ -9,4 +9,13 @@
 .responsive-four-cols-per-row {
   @apply grid md:grid-cols-4 lg:grid-cols-4 sm:grid-cols-1  gap-4 items-center;
 }
-
+body {
+  font-family: 'Vazirmatn';
+}
+/* .app {
+  @layer utilities {
+    .font-heading {
+      font-family: "Your Custom Font", sans-serif;
+    }
+  }
+} */

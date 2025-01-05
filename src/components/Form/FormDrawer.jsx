@@ -8,7 +8,7 @@ import {
   Select,
   Option,
 } from "@material-tailwind/react";
-import { useUsersStore } from "../stores/users";
+import { useUsersStore } from "../../stores/users";
 import { useForm } from "react-hook-form";
 import {
   phoneValidator,
@@ -17,9 +17,9 @@ import {
   numericValidator,
   cardNumberValidator,
   googleMapsUrlValidator,
-} from "../utils/validators";
-import { DocumentUploader } from "./Form/DocumentsUploader";
-import { AdditionalDocuments } from "./Form/AdditionalDocuments";
+} from "../../utils/validators";
+import { DocumentUploader } from "./DocumentsUploader";
+import { AdditionalDocuments } from "./AdditionalDocuments";
 
 export function FormDrawer({ userId }) {
   const store = useUsersStore();

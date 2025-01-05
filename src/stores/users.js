@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 /**
- * Custom hook for managing user data and documents
+ * Store for managing user data and documents
  */
 export const useUsersStore = () => {
   const MAX_FILE_SIZE = 10485760; // 10 MB
