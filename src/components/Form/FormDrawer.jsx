@@ -77,16 +77,25 @@ export function FormDrawer({ userId, open, setOpen }) {
   }, [store.users, userId]); // Re-run the effect whenever users or userId changes
 
   const onSubmit = async (data) => {
+    // Validate the phone number first or handle the phone modal state
+    if (isPhoneModalOpen) {
+      return; // Wait for the phone number modal interaction to complete
+    }
+    
     // Store the form data temporarily
     setTempData(data);
 
-    // Show the confirmation modal
-    setConfirmModal(true);
+    // Close the phone number modal, if needed, before showing confirmation
+    setIsPhoneModalOpen(false);
+
+    // Delay showing confirmation to ensure proper state update
+    setTimeout(() => {
+      setConfirmModal(true);
+    }, 0);
   };
 
-  
   /**
-   * Callback function to update user 
+   * Callback function to update user
    */
   const handleConfirmUpdate = () => {
     if (tempData) {
@@ -622,11 +631,13 @@ export function FormDrawer({ userId, open, setOpen }) {
               onPhoneNumberChange={handlePhoneNumberChange}
             />
 
-            <ConfirmationModal
-              open={showConfirmModal}
-              setOpen={setConfirmModal}
-              onConfirm={handleConfirmUpdate}
-            />
+            {showConfirmModal && !isPhoneModalOpen && (
+              <ConfirmationModal
+                open={showConfirmModal}
+                setOpen={setConfirmModal}
+                onConfirm={handleConfirmUpdate}
+              />
+            )}
 
             {/* Toast for copy feedback */}
             {toastOpen && (

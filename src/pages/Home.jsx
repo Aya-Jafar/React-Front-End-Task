@@ -4,7 +4,7 @@ import { useUsersStore } from "../stores/users";
 import { Card, Typography } from "@material-tailwind/react";
 import { FormDrawer } from "../components/Form/FormDrawer";
 
-export default function Home() {
+const Home = () => {
   const store = useUsersStore();
   const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null); // Track selected user ID
@@ -116,4 +116,5 @@ export default function Home() {
       )}
     </>
   );
-}
+};
+export default Home;
