@@ -4,6 +4,12 @@ import React, { useState } from "react";
  * Store for managing user data and documents
  */
 export const useUsersStore = () => {
+  /**
+   * Constants
+   * */
+  const TABLE_HEADERS = ["الاسم", "العمر", "رقم الهاتف", ""];
+  const MAX_FILE_SIZE = 10485760; // For file size validation
+
   // Helper function to generate document structure
   const generateInitialDocuments = () =>
     [
@@ -49,10 +55,13 @@ export const useUsersStore = () => {
   }));
 
   /**
-   * Constants
+   * User state getters & setters
+   *
    * */
-  const MAX_FILE_SIZE = 10485760; // For file size validation
-  const TABLE_HEADERS = ["الاسم", "العمر", "رقم الهاتف", ""];
+
+  // State to store users data
+  const [users, setUsers] = React.useState(mockData);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const getAll = () => users;
 
@@ -65,11 +74,7 @@ export const useUsersStore = () => {
       )
     );
   };
-  // State to store users data
-  const [users, setUsers] = React.useState(mockData);
-  const [currentUser, setCurrentUser] = useState(null);
 
-  
   /**
    * Creates a new additional document for a specific user.
    *
