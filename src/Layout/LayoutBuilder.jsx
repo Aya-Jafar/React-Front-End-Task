@@ -1,9 +1,9 @@
 import React from "react";
-import { Nav } from "../common/Nav";
-import { SideBar } from "../common/SideBar";
+import { Nav } from "../components/common/Nav";
+import { SideBar } from "../components/common/SideBar";
 
 // Lazy load components
-const Home = React.lazy(() => import("../../pages/Home"));
+const Home = React.lazy(() => import("../pages/Home"));
 
 /**
  * LayoutBuilder is a reusable layout container that can structure the page.

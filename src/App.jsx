@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { LayoutBuilder } from "./components/Layout/LayoutBuilder";
+import { LayoutBuilder } from "./Layout/LayoutBuilder";
 import "./App.css";
 
 export default function App() {

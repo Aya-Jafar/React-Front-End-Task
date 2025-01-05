@@ -1,3 +1,8 @@
+/**
+ * Validator for phone numbers.
+ *
+ * @type {Object}
+ */
 export const phoneValidator = {
   required: "رقم الهاتف مطلوب",
   pattern: {
@@ -13,6 +18,12 @@ export const phoneValidator = {
     message: "رقم الهاتف يجب أن لا يتجاوز 15 رقمًا",
   },
 };
+
+/**
+ * Validator for Google Maps URLs.
+ *
+ * @type {Object}
+ */
 export const googleMapsUrlValidator = {
   required: "رابط خريطة مطلوب",
   pattern: {
@@ -22,6 +33,11 @@ export const googleMapsUrlValidator = {
   },
 };
 
+/**
+ * Validator for email addresses.
+ *
+ * @type {Object}
+ */
 export const emailValidator = {
   required: "البريد الالكتروني مطلوب",
   pattern: {
@@ -30,6 +46,11 @@ export const emailValidator = {
   },
 };
 
+/**
+ * Validator for numeric fields.
+ * 
+ * @type {Object}
+ */
 export const numericValidator = {
   required: "هذا الحقل مطلوب",
 
@@ -39,10 +60,22 @@ export const numericValidator = {
   },
 };
 
+
+/**
+ * Validator for required text fields.
+ * 
+ * @type {Object}
+ */
 export const requiredText = {
   required: "هذا الحقل مطلوب",
 };
 
+
+/**
+ * Validator for card number fields (12 digits).
+ * 
+ * @type {Object}
+ */
 export const cardNumberValidator = {
   required: "رقم بطاقة الهوية الموحدة مطلوب",
   pattern: {

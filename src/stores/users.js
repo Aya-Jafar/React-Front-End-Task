@@ -4,7 +4,24 @@ import React, { useState } from "react";
  * Store for managing user data and documents
  */
 export const useUsersStore = () => {
-  const MAX_FILE_SIZE = 10485760; // 10 MB
+  // Helper function to generate document structure
+  const generateInitialDocuments = () =>
+    [
+      "الهوية الموحدة (الوجه الاول)",
+      "الهوية الموحدة (الوجه الثاني)",
+      "بطاقة السكن (الوجه الاول)",
+      "بطاقة السكن (الوجه الثاني)",
+      "وثيقة التخرج",
+      "كتاب استمرارية العمل",
+      "هوية الموظف (الوجه الاول)",
+      "هوية الموظف (الوجه الثاني)",
+      "هوية النقابة (الوجه الاول)",
+      "هوية النقابة (الوجه الثاني)",
+    ].map((title) => ({
+      title,
+      fileName: "Upload file",
+      isUploaded: false,
+    }));
 
   // Mock data representing user records
   const mockData = Array.from({ length: 5 }, (_, id) => ({
@@ -27,77 +44,20 @@ export const useUsersStore = () => {
     alley: "13",
     house: "77",
     active: true,
-    documents: [
-      {
-        title: "الهوية الموحدة (الوجه الاول)",
-        fileName: "Upload file", // Default placeholder file name
-        isUploaded: false, // Indicates whether the file has been uploaded
-      },
-      {
-        title: "الهوية الموحدة (الوجه الثاني)",
-        fileName: "Upload file",
-        isUploaded: false,
-      },
-      {
-        title: "بطاقة السكن (الوجه الاول)",
-        fileName: "Upload file",
-        isUploaded: false,
-      },
-      {
-        title: "بطاقة السكن (الوجه الثاني)",
-        fileName: "Upload file",
-        isUploaded: false,
-      },
-
-      {
-        title: "وثيقة التخرج ",
-        fileName: "Upload file",
-        isUploaded: false,
-      },
-
-      {
-        title: "كتاب استمرارية العمل",
-        fileName: "Upload file",
-        isUploaded: false,
-      },
-      {
-        title: "هوية الموظف (الوجه الاول)",
-        fileName: "Upload file",
-        isUploaded: false,
-      },
-      {
-        title: "هوية الموظف (الوجه الثاني)",
-        fileName: "Upload file",
-        isUploaded: false,
-      },
-      {
-        title: "هوية النقابة (الوجه الاول)",
-        fileName: "Upload file",
-        isUploaded: false,
-      },
-
-      {
-        title: "هوية النقابة (الوجه الثاني)",
-        fileName: "Upload file",
-        isUploaded: false,
-      },
-    ],
+    documents: generateInitialDocuments(),
     additionalDocuments: [],
   }));
 
+  /**
+   * Constants
+   * */
+  const MAX_FILE_SIZE = 10485760; // For file size validation
   const TABLE_HEADERS = ["الاسم", "العمر", "رقم الهاتف", ""];
-  /**
-   * Returns all the user data
-   *
-   * @returns {array} - Array of all user records
-   */
-  const getAll = () => {
-    return mockData;
-  };
 
-  /**
-   * Updates the user data
-   */
+  const getAll = () => users;
+
+  const getByID = (id) => users.find((record) => record.id === id) || null;
+
   const update = (id, updatedData) => {
     setUsers((prevUsers) =>
       prevUsers.map(
@@ -105,129 +65,19 @@ export const useUsersStore = () => {
       )
     );
   };
-  
-
-  /**
-   * Updates phone number the user data
-   */
-  const updatePhoneNumber = (id, updatedData) => {
-    setUsers((prevUsers) =>
-      prevUsers.map(
-        (user) =>
-          user.id === id
-            ? { ...user, ...updatedData } // Merge updated data for the matching user
-            : user // Keep the user unchanged if the id doesn't match
-      )
-    );
-  };
-
   // State to store users data
   const [users, setUsers] = React.useState(mockData);
   const [currentUser, setCurrentUser] = useState(null);
 
+  
   /**
-   * Handles file changes when a user uploads a document
+   * Creates a new additional document for a specific user.
    *
-   * @param {object} event - The change event from the file input
-   * @param {number} userId - The ID of the user whose document is being updated
-   * @param {string} title - The title of the document being updated
+   * @param {number} userId - The ID of the user to whom the new document will be added.
+   * @param {string} fileURL - The URL of the newly uploaded file (used for downloading later).
+   * @param {File} selectedFile - The file object that the user uploaded.
    */
-  const handleDocumentsChange = (event, userId, title) => {
-    const selectedFile = event.target.files[0];
-
-    // Validate the size of the file
-    if (selectedFile.size > MAX_FILE_SIZE) {
-      alert("File size exceeds the limit!");
-      return;
-    }
-    // Create a URL for the selected file to enable downloading later
-    const fileURL = selectedFile ? URL.createObjectURL(selectedFile) : null;
-
-    const updateDocument = (doc) => {
-      if (doc.title === title) {
-        return {
-          ...doc,
-          fileName: selectedFile ? selectedFile.name : "Upload file",
-          isUploaded: !!selectedFile,
-          fileURL: fileURL, // Store the file URL for downloading
-        };
-      }
-      return doc;
-    };
-
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => {
-        if (user.id === userId) {
-          return {
-            ...user,
-            documents: user.documents.map(updateDocument),
-          };
-        }
-        return user;
-      })
-    );
-  };
-
-  /**
-   * Handles file changes when a user uploads a document
-   *
-   * @param {object} event - The change event from the file input
-   * @param {number} userId - The ID of the user whose document is being updated
-   * @param {string} title - The title of the document being updated
-   */
-  const handleAdditionalDocumentsChange = (event, userId, documentIndex) => {
-    const selectedFile = event.target.files[0];
-    // Validate the size of the file
-    if (selectedFile.size > MAX_FILE_SIZE) {
-      alert("File size exceeds the limit!");
-      return;
-    }
-    // Create a URL for the selected file to enable downloading later
-    const fileURL = selectedFile ? URL.createObjectURL(selectedFile) : null;
-
-    // Update the document at the specific index
-    const updateDocument = (doc, index) => {
-      if (index === documentIndex) {
-        return {
-          ...doc,
-          fileName: selectedFile ? selectedFile.name : "Upload file",
-          isUploaded: !!selectedFile,
-          fileURL: fileURL, // Store the file URL for downloading
-        };
-      }
-      return doc;
-    };
-
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => {
-        if (user.id === userId) {
-          return {
-            ...user,
-            additionalDocuments: user.additionalDocuments.map(updateDocument),
-          };
-        }
-        return user;
-      })
-    );
-  };
-
-  /**
-   * Adds a new document to the additionalDocuments array for a user
-   *
-   * @param {number} userId - The ID of the user to add the document to
-   * @param {string} title - The title of the new document
-   */
-  const addAdditionalDocument = (e, userId) => {
-    const selectedFile = e.target.files[0];
-    // Validate the size of the file
-    if (selectedFile.size > MAX_FILE_SIZE) {
-      alert("File size exceeds the limit!");
-      return;
-    }
-
-    // Create a URL for the selected file to enable downloading later
-    const fileURL = selectedFile ? URL.createObjectURL(selectedFile) : null;
-
+  const createAdditionalDocument = (userId, fileURL, selectedFile) => {
     setUsers((prevUsers) =>
       prevUsers.map((user) => {
         if (user.id === userId) {
@@ -250,79 +100,141 @@ export const useUsersStore = () => {
   };
 
   /**
-   * Returns a user record by their ID
+   * Updates the documents (either default or additional) for a specific user.
    *
-   * @param {number} id - The ID of the user to fetch
-   * @returns {object|null} - The user record with the matching ID or null if not found
+   * @param {number} userId - The ID of the user whose document is being updated.
+   * @param {string} documentType - The type of document to update. Can be "default" or "additional".
+   * @param {string} fileURL - The URL of the uploaded file (used for downloading later).
+   * @param {File} selectedFile - The file object that the user uploaded.
+   * @param {number} [documentIndex=null] - The index of the document in the additionalDocuments array (only required for additional documents).
+   * @param {string} [title=null] - The title of the default document being updated (only required for default documents).
    */
-  const getByID = (id) => {
-    return users.find((record) => record.id === id) || null;
+  const updateDocuments = (
+    userId,
+    documentType,
+    fileURL,
+    selectedFile,
+    documentIndex = null,
+    title = null
+  ) => {
+    const updateDocument = (doc, index = null) => {
+      // Check if this document is the one being updated
+      if (
+        (documentType === "default" && doc.title === title) ||
+        (documentType === "additional" && index === documentIndex)
+      ) {
+        return {
+          ...doc,
+          fileName: selectedFile ? selectedFile.name : "Upload file",
+          isUploaded: !!selectedFile,
+          fileURL: fileURL, // Store the file URL for downloading
+        };
+      }
+      return doc;
+    };
+
+    // Update the user’s document list
+    setUsers((prevUsers) =>
+      prevUsers.map((user) => {
+        if (user.id === userId) {
+          return {
+            ...user,
+            [documentType === "default" ? "documents" : "additionalDocuments"]:
+              user[
+                documentType === "default" ? "documents" : "additionalDocuments"
+              ].map((doc, index) => updateDocument(doc, index)),
+          };
+        }
+        return user;
+      })
+    );
   };
 
   /**
-   * Returns a list of guild names
+   * Handles file changes when a user uploads a document
    *
-   * @returns {array} - List of guilds
+   * @param {object} event - The change event from the file input
+   * @param {number} userId - The ID of the user whose document is being updated
+   * @param {string} title - The title of the document being updated
+   * @param {number} documentIndex - The index of the document if updating additional documents
    */
-  const getGuildList = () => {
-    return [
-      "نقابة المهندسين",
-      "نقابة الأطباء",
-      "نقابة المحامين",
-      "نقابة المعلمين",
-      "نقابة الصحفيين",
-      "نقابة الصيادلة",
-      "نقابة المهن التمثيلية",
-      "نقابة العاملين بالتكنولوجيا",
-    ];
+  const handleDocumentsChange = (
+    event,
+    userId,
+    title = null,
+    documentIndex = null
+  ) => {
+    const selectedFile = event.target.files[0];
+
+    // Validate the size of the file
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      alert("File size exceeds the limit!");
+      return;
+    }
+    // Create a URL for the selected file to enable downloading later
+    const fileURL = selectedFile ? URL.createObjectURL(selectedFile) : null;
+
+    // Normal documents update
+    if (title !== null) {
+      updateDocuments(userId, "default", fileURL, selectedFile, null, title);
+    }
+    // Additional documents update
+    else if (title === null && documentIndex !== null) {
+      updateDocuments(
+        userId,
+        "additional",
+        fileURL,
+        selectedFile,
+        documentIndex
+      );
+    }
+    // Additional document create
+    else if (title === null && documentIndex === null) {
+      createAdditionalDocument(userId, fileURL, selectedFile);
+    }
   };
 
-  /**
-   * Returns options for marriage years
-   *
-   * @returns {array} - List of marriage year options
-   */
-  const getMarraigeYearsOptions = () => {
-    return ["اقل من سنة", "سنة واحدة", "اكثر من سنة", "اكثر من ٥ سنوات"];
-  };
+  const getGuildList = () => [
+    "نقابة المهندسين",
+    "نقابة الأطباء",
+    "نقابة المحامين",
+    "نقابة المعلمين",
+    "نقابة الصحفيين",
+    "نقابة الصيادلة",
+    "نقابة المهن التمثيلية",
+    "نقابة العاملين بالتكنولوجيا",
+  ];
 
-  /**
-   * Returns a list of cities
-   *
-   * @returns {array} - List of cities
-   */
-  const getCities = () => {
-    return [
-      "بغداد",
-      "البصرة",
-      "نينوى",
-      "النجف",
-      "أربيل",
-      "كربلاء",
-      "السليمانية",
-      "الموصل",
-    ];
-  };
+  const getMarraigeYearsOptions = () => [
+    "اقل من سنة",
+    "سنة واحدة",
+    "اكثر من سنة",
+    "اكثر من ٥ سنوات",
+  ];
 
-  /**
-   * Returns a list of areas in Baghdad
-   *
-   * @returns {array} - List of Baghdad areas
-   */
-  const getBaghdadAreas = () => {
-    return [
-      "الكرادة",
-      "المنصور",
-      "الشعب",
-      "الزعفرانية",
-      "باب المعظم",
-      "الدورة",
-      "الجادرية",
-      "السيدية",
-      "الكاظمية",
-      "الشيوخ",
-    ];
-  };
+  const getCities = () => [
+    "بغداد",
+    "البصرة",
+    "نينوى",
+    "النجف",
+    "أربيل",
+    "كربلاء",
+    "السليمانية",
+    "الموصل",
+  ];
+
+  const getBaghdadAreas = () => [
+    "الكرادة",
+    "المنصور",
+    "الشعب",
+    "الزعفرانية",
+    "باب المعظم",
+    "الدورة",
+    "الجادرية",
+    "السيدية",
+    "الكاظمية",
+    "الشيوخ",
+  ];
 
   return {
     getAll,
@@ -333,13 +245,10 @@ export const useUsersStore = () => {
     getBaghdadAreas,
     mockData,
     handleDocumentsChange,
-    handleAdditionalDocumentsChange,
     users,
-    addAdditionalDocument,
     setCurrentUser,
     currentUser,
     TABLE_HEADERS,
-    updatePhoneNumber,
     update,
   };
 };

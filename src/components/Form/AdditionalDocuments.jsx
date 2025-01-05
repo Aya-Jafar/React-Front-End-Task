@@ -43,7 +43,7 @@ export const AdditionalDocuments = ({ userId }) => {
                     type="file"
                     className="w-full h-full opacity-0 cursor-pointer hidden" // Ensure higher z-index here
                     onChange={(e) => {
-                      store.handleAdditionalDocumentsChange(e, user.id, index);
+                      store.handleDocumentsChange(e, user.id, index);
                     }}
                   />
                 </div>
@@ -59,7 +59,7 @@ export const AdditionalDocuments = ({ userId }) => {
           ref={additionalDocumentsInputRef}
           type="file"
           className="w-full h-full opacity-0 cursor-pointer hidden"
-          onChange={(e) => store.addAdditionalDocument(e, user.id)}
+          onChange={(e) => store.handleDocumentsChange(e, user.id)}
         />
       </div>
     </div>
