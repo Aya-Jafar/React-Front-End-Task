@@ -11,9 +11,8 @@ module.exports = withMT({
         primary: "#01B172", 
         secondary: "#FF5722",
       },
-       screens: {
-        'sm': '640px', // Default sm breakpoint
-        'custom': '730px', // Custom breakpoint for 730px
+     screens: {
+        'ipad': { 'min': '768px', 'max': '1024px' }, // iPad range (portrait to landscape)
       },
       typography: {
         heading: {

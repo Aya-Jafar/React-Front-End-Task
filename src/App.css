@@ -7,7 +7,7 @@
 }
 
 .responsive-four-cols-per-row {
-  @apply grid sm:grid-cols-1 custom:grid-cols-1 md:grid-cols-4 gap-4 items-center grid-flow-row sm:text-sm;
+  @apply grid sm:grid-cols-1 ipad:grid-cols-1 md:grid-cols-4 gap-4 items-center grid-flow-row sm:text-sm;
 }
 
 
