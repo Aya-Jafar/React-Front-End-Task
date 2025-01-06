@@ -1,6 +1,6 @@
 # React + Vite 
 
-![result](src/assets/result.png)
+<!-- ![result](src/assets/result.png) -->
 
 Currently, two official plugins are available:
 
