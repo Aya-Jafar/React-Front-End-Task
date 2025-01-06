@@ -12,6 +12,7 @@ import {
 import { useUsersStore } from "../../stores/users";
 import { useForm } from "react-hook-form";
 import { ConfirmationModal } from "./ConfirmationModal";
+import { ErrorMessage } from "./ErrorMessage";
 import {
   phoneValidator,
   requiredText,
@@ -24,6 +25,8 @@ import { handleFieldCopy } from "../../utils/helpers";
 import { DocumentUploader } from "./DocumentsUploader";
 import { AdditionalDocuments } from "./AdditionalDocuments";
 import { FieldEditModal } from "./FieldEditModal";
+import { CloseIcon } from "../common/CloseIcon";
+import { BoldHeader } from "../common/BoldHeading";
 
 export const FormDrawer = ({ userId, open, setOpen }) => {
   const store = useUsersStore();
@@ -59,22 +62,12 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
     const user = getByID(userId); // Get the updated user based on userId
     setCurrentUser(user);
     if (user) {
-      // If in edit mode, refill the fields values
-      setValue("email", user.email);
-      setValue("code", user.code);
-      setValue("phoneNumber", user.phoneNumber);
-      setValue("age", user.age);
-      setValue("salary", user.salary);
-      setValue("cardNumber", user.cardNumber);
-      setValue("guild", user.guild);
-      setValue("socialStatus", user.socialStatus);
-      setValue("marraigeYears", user.marraigeYears);
-      setValue("city", user.city);
-      setValue("area", user.area);
-      setValue("mapLink", user.mapLink);
-      setValue("neighborhood", user.neighborhood);
-      setValue("alley", user.alley);
-      setValue("house", user.house);
+      // If in edit mode, refill the fields values based on the user fields
+      Object.entries(user).forEach(([key, value]) => {
+        if (value !== undefined) {
+          setValue(key, value);
+        }
+      });
     }
   }, [store.users, userId]); // Re-run the effect whenever users or userId changes
 
@@ -130,27 +123,8 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
         >
           <div className="px-4 pb-2">
             {/* Close Icon */}
-            <IconButton
-              variant="text"
-              color="blue-gray"
-              onClick={closeDrawer}
-              className="mt-3"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="h-5 w-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </IconButton>
+            <CloseIcon onClose={closeDrawer} />
+
             {/* Username & Edit icon */}
             <div className="flex items-center">
               <Typography variant="h5" className="font-heading font-bold">
@@ -203,10 +177,9 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
           </div>
 
           <div className="my-3 px-4">
-            <Typography variant="h5" className="font-heading font-meduim">
-              المعلومات الرئيسية
-            </Typography>
+            <BoldHeader text={"المعلومات الرئيسية"} />
           </div>
+
           <form
             className="flex flex-col gap-6 p-4"
             onSubmit={handleSubmit(onSubmit)}
@@ -225,15 +198,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                   label="الرمز"
                   error={!!errors.code}
                 />
-                {errors.code && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading mt-1"
-                  >
-                    {errors.code?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.code} />
               </div>
 
               {/* Column 2: رقم الهاتف */}
@@ -248,15 +213,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                   label="رقم الهاتف"
                   error={!!errors.phoneNumber}
                 />
-                {errors.phoneNumber && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading mt-1"
-                  >
-                    {errors.phoneNumber?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.phoneNumber} />
               </div>
             </div>
 
@@ -283,15 +240,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                     label="البريد الالكتروني الخاص بالعمل"
                     error={!!errors?.email}
                   />
-                  {errors.email && (
-                    <Typography
-                      variant="small"
-                      color="red"
-                      className="font-heading mt-1"
-                    >
-                      {errors.email?.message}
-                    </Typography>
-                  )}
+                  <ErrorMessage field={errors.email} />
                 </div>
               </div>
 
@@ -319,15 +268,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                     error={!!errors?.age}
                   />
                 </div>
-                {errors.age && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading mt-1"
-                  >
-                    {errors.age?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.age} />
               </div>
 
               {/* Column 3: الراتب */}
@@ -342,15 +283,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                   label="مثلا : 900,000 د.ع"
                   error={!!errors?.salary}
                 />
-                {errors.salary && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading mt-1"
-                  >
-                    {errors.salary?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.salary} />
               </div>
 
               {/* Column 4: رقم البطاقة */}
@@ -364,15 +297,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                   label="رقم بطاقة الهوية الموحدة"
                   error={!!errors?.cardNumber}
                 />
-                {errors.cardNumber && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading mt-1"
-                  >
-                    {errors.cardNumber?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.cardNumber} />
               </div>
             </div>
 
@@ -394,23 +319,11 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                     <Option key={index}>{guild}</Option>
                   ))}
                 </Select>
-                {errors.guild && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading"
-                  >
-                    {errors.guild?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.guild} />
               </div>
             </div>
 
-            <div className="mt-2">
-              <Typography variant="h5" className="font-heading font-meduim">
-                الحالة الاجتماعية
-              </Typography>
-            </div>
+            <BoldHeader text={"الحالة الاجتماعية"} className="mt-2" />
 
             {/* Fourth Row */}
             <div className="responsive-two-cols-per-row">
@@ -428,15 +341,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                   <Option> متزوج</Option>
                   <Option>اعزب </Option>
                 </Select>
-                {errors.socialStatus && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading"
-                  >
-                    {errors.socialStatus?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.socialStatus} />
               </div>
               <div>
                 <Typography color="blue-gray" className="font-heading">
@@ -453,22 +358,12 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                     <Option key={index}>{year}</Option>
                   ))}
                 </Select>
-                {errors.marraigeYears && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading"
-                  >
-                    {errors.marraigeYears?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.marraigeYears} />
               </div>
             </div>
 
             <div className="mt-2">
-              <Typography variant="h5" className="font-heading font-meduim">
-                الاقامة و السكن{" "}
-              </Typography>
+              <BoldHeader text={"الاقامة و السكن"} />
             </div>
 
             {/* Fifth row */}
@@ -488,15 +383,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                     <Option key={index}>{city}</Option>
                   ))}
                 </Select>
-                {errors.city && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading"
-                  >
-                    {errors.city?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.city} />
               </div>
               <div>
                 <Typography className="font-heading font-meduim">
@@ -513,15 +400,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                     <Option key={index}>{area}</Option>
                   ))}
                 </Select>
-                {errors.city && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading"
-                  >
-                    {errors.city?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.area} />
               </div>
               <div>
                 <Typography color="blue-gray" className="font-heading">
@@ -534,15 +413,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                   label=" رابط الخارطة  "
                   error={!!errors?.mapLink}
                 />
-                {errors.mapLink && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading mt-1"
-                  >
-                    {errors.mapLink?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.mapLink} />
               </div>
             </div>
 
@@ -559,15 +430,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                   label="المحلة"
                   error={!!errors?.neighborhood}
                 />
-                {errors.neighborhood && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading mt-1"
-                  >
-                    {errors.neighborhood?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.neighborhood} />
               </div>
 
               <div>
@@ -581,15 +444,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                   label="الزقاق"
                   error={!!errors?.alley}
                 />
-                {errors.alley && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading mt-1"
-                  >
-                    {errors.alley?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.alley} />
               </div>
 
               <div>
@@ -603,18 +458,11 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                   label="الدار"
                   error={!!errors?.alley}
                 />
-                {errors.house && (
-                  <Typography
-                    variant="small"
-                    color="red"
-                    className="font-heading mt-1"
-                  >
-                    {errors.house?.message}
-                  </Typography>
-                )}
+                <ErrorMessage field={errors.house} />
               </div>
             </div>
 
+            {/* Documents section */}
             <div>
               <DocumentUploader userId={userId} />
               <AdditionalDocuments userId={userId} />
@@ -630,7 +478,6 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
             </div>
 
             {/* Field edit modals */}
-
             <FieldEditModal
               userId={userId}
               fieldName="phoneNumber"

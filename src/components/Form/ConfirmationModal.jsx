@@ -7,8 +7,6 @@ import {
 } from "@material-tailwind/react";
 
 export const ConfirmationModal = ({ open, setOpen, onConfirm }) => {
-
-    
   return (
     <Dialog
       open={open}
@@ -45,7 +43,10 @@ export const ConfirmationModal = ({ open, setOpen, onConfirm }) => {
       <DialogFooter>
         <Button
           className="w-full bg-black mt-10 font-heading"
-          onClick={()=>onConfirm()}
+          onClick={() => {
+            onConfirm();
+            setOpen(false)
+          }}
         >
           <span>متأكد</span>
         </Button>
