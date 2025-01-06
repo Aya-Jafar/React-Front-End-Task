@@ -14,7 +14,7 @@ export const SideBar = ({ activeTab, setActiveTab }) => {
 
   return (
     <Card
-      className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5"
+      className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 hidden md:block" // Hide on mobile (hidden), show on medium and larger screens (md:block)
       dir="rtl"
     >
       {/* Profile image and username */}

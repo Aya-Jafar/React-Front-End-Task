@@ -487,7 +487,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
             <div className="flex justify-end">
               <Button
                 type="submit"
-                className="md:w-[14%] sm:w-[20%] font-heading bg-primary text-md"
+                className="md:w-[14%] sm:w-[30%] font-heading bg-primary text-md"
               >
                 حفظ التعديلات
               </Button>

@@ -11,6 +11,10 @@ module.exports = withMT({
         primary: "#01B172", 
         secondary: "#FF5722",
       },
+       screens: {
+        'sm': '640px', // Default sm breakpoint
+        'custom': '730px', // Custom breakpoint for 730px
+      },
       typography: {
         heading: {
           fontFamily: "'Vazirmatn'", 

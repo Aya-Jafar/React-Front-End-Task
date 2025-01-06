@@ -7,8 +7,9 @@
 }
 
 .responsive-four-cols-per-row {
-  @apply grid md:grid-cols-4 lg:grid-cols-4 sm:grid-cols-1  gap-4 items-center;
+  @apply grid sm:grid-cols-1 custom:grid-cols-1 md:grid-cols-4 gap-4 items-center grid-flow-row sm:text-sm;
 }
+
 
 .left-3 {
   left: auto !important;
