@@ -36,7 +36,7 @@ export const DocumentUploader = ({ userId }) => {
                 <span className="ml-2">{doc.fileName}</span>
                 {!doc.isUploaded ? (
                   <img
-                    src="public/upload-icon.png"
+                    src={"/public/upload-icon.png"}
                     alt="icon"
                     className="w-[28px]"
                   />
