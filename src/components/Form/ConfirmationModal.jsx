@@ -10,7 +10,7 @@ export const ConfirmationModal = ({ open, setOpen, onConfirm }) => {
   return (
     <Dialog
       open={open}
-      handler={() => setNextModalOpen(false)}
+      handler={() => setOpen(false)}
       dir="rtl"
       className="font-heading"
       size="xs"
@@ -45,7 +45,7 @@ export const ConfirmationModal = ({ open, setOpen, onConfirm }) => {
           className="w-full bg-black mt-10 font-heading"
           onClick={() => {
             onConfirm();
-            setOpen(false)
+            setOpen(false);
           }}
         >
           <span>متأكد</span>

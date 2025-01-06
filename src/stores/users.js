@@ -7,8 +7,14 @@ import { validateFile } from "../utils/validators";
 export const useUsersStore = () => {
   /**
    * Constants
-   * */
-  const TABLE_HEADERS = ["الاسم", "العمر", "رقم الهاتف", ""];
+   **/
+  const TABLE_HEADERS = [
+    "الاسم",
+    "البريد الالكتروني",
+    "العمر",
+    "رقم الهاتف",
+    "",
+  ];
 
   // Helper function to generate document structure
   const generateInitialDocuments = () =>
@@ -30,7 +36,7 @@ export const useUsersStore = () => {
     }));
 
   // Mock data representing user records
-  const mockData = Array.from({ length: 5 }, (_, id) => ({
+  const mockData = Array.from({ length: 7 }, (_, id) => ({
     id: id,
     userName: "محمد حمادي احمد الاحمدي",
     email: `ahaa${id}@tamata.com`,
@@ -58,7 +64,6 @@ export const useUsersStore = () => {
    * User state getters & setters
    *
    * */
-
   // State to store users data
   const [users, setUsers] = React.useState(mockData);
   const [currentUser, setCurrentUser] = useState(null);
@@ -254,5 +259,6 @@ export const useUsersStore = () => {
     currentUser,
     TABLE_HEADERS,
     update,
+    setUsers,
   };
 };

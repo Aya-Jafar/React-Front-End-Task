@@ -106,9 +106,9 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
       ...prevData,
       [fieldName]: newValue,
     }));
+
     setValue(fieldName, newValue); // Update form field in form
   };
-
 
   return (
     currentUser && (
