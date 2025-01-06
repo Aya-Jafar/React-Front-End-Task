@@ -94,7 +94,6 @@ export const cardNumberValidator = {
  * Validates the selected file based on size and type
  *
  * @param {File} selectedFile - The file selected by the user
- * @param {Array} docs - The list of existing documents to check for duplicates
  * @returns {boolean} - Returns true if the file is valid, otherwise false
  */
 
