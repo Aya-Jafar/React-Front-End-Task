@@ -13,7 +13,7 @@ const Home = () => {
 
   useEffect(() => {
     setUsers(getAll());
-  }, []);
+  }, [users]);
 
   // Open drawer for a specific user
   const openDrawer = (id) => {

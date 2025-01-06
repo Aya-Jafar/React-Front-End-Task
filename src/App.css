@@ -9,6 +9,17 @@
 .responsive-four-cols-per-row {
   @apply grid md:grid-cols-4 lg:grid-cols-4 sm:grid-cols-1  gap-4 items-center;
 }
+
+.left-3 {
+  left: auto !important;
+  right: 2rem;
+}
+
+/* .right-2 {
+  right: none;
+  left: 3rem;
+} */
+
 body {
-  font-family: 'Vazirmatn';
+  font-family: "Vazirmatn";
 }

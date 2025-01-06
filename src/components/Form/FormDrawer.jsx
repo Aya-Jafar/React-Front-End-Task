@@ -29,6 +29,7 @@ import { CloseIcon } from "../common/CloseIcon";
 import { BoldHeader } from "../common/BoldHeading";
 
 export const FormDrawer = ({ userId, open, setOpen }) => {
+  // Store initialization
   const store = useUsersStore();
   const {
     getByID,
@@ -38,7 +39,15 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
     getBaghdadAreas,
   } = store;
 
-  // States
+  // React Hook Form initialization
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm();
+
+  // Local States
   const [currentUser, setCurrentUser] = useState(null);
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
@@ -49,14 +58,6 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
   const [toastMessage, setToastMessage] = useState("");
 
   const closeDrawer = () => setOpen(false);
-
-  // React Hook Form initialization
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-  } = useForm();
 
   useEffect(() => {
     const user = getByID(userId); // Get the updated user based on userId
@@ -69,17 +70,14 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
         }
       });
     }
-  }, [store.users, userId]); // Re-run the effect whenever users or userId changes
+  }, [userId]); // Re-run the effect whenever userId changes
+
 
   const onSubmit = async (data) => {
-    if (isPhoneModalOpen || isEmailModalOpen || isNameModalOpen) {
-      return; // To ensure that corfirm and edit modals are not opened togather
-    }
+    if (isPhoneModalOpen || isEmailModalOpen || isNameModalOpen) return; // To ensure that corfirm and edit modals are not opened togather
+
     // Store the form data temporarily
     setTempData(data);
-
-    // Close the phone number modal, if needed, before showing confirmation
-    setIsPhoneModalOpen(false);
 
     // Delay showing confirmation to ensure proper state update
     setTimeout(() => {
@@ -99,6 +97,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
       setTempData(null);
     }
   };
+
   /**
    * Callback function to update any field from modal
    */
@@ -109,6 +108,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
     }));
     setValue(fieldName, newValue); // Update form field in form
   };
+
 
   return (
     currentUser && (
@@ -226,7 +226,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                 </Typography>
                 <div className="relative">
                   <span
-                    className="absolute inset-y-0 left-3 flex items-center text-blue-gray cursor-pointer z-10"
+                    className="absolute inset-y-0 !left-3 flex items-center text-blue-gray cursor-pointer z-10"
                     onClick={() =>
                       handleFieldCopy("email", setToastOpen, setToastMessage)
                     }
@@ -252,7 +252,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                 </Typography>
                 <div className="relative">
                   <span
-                    className="absolute inset-y-0 left-3 flex items-center text-blue-gray cursor-pointer z-10"
+                    className="absolute inset-y-0 !left-3 flex items-center text-blue-gray cursor-pointer z-10"
                     onClick={() =>
                       handleFieldCopy("age", setToastOpen, setToastMessage)
                     }
@@ -311,12 +311,15 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                 <Select
                   name="guild"
                   {...register("guild", requiredText)}
+                  value={currentUser?.guild}
+                  className="font-heading"
                   error={!!errors.guild}
                   label="النقابة التي تنتمي لها"
-                  className="font-heading"
                 >
                   {getGuildList().map((guild, index) => (
-                    <Option key={index}>{guild}</Option>
+                    <Option key={index} value={guild}>
+                      {guild}
+                    </Option>
                   ))}
                 </Select>
                 <ErrorMessage field={errors.guild} />
@@ -334,12 +337,13 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                 <Select
                   name="socialStatus"
                   {...register("socialStatus", requiredText)}
+                  value={currentUser?.socialStatus}
                   error={!!errors.socialStatus}
                   label="الحالة الاجتماعية"
                   className="font-heading"
                 >
-                  <Option> متزوج</Option>
-                  <Option>اعزب </Option>
+                  <Option value="متزوج">متزوج</Option>
+                  <Option value="اعزب">اعزب</Option>
                 </Select>
                 <ErrorMessage field={errors.socialStatus} />
               </div>
@@ -347,15 +351,19 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                 <Typography color="blue-gray" className="font-heading">
                   عدد سنوات الزواج
                 </Typography>
+
                 <Select
-                  className="font-heading"
                   name="marraigeYears"
                   {...register("marraigeYears", requiredText)}
+                  value={currentUser?.marraigeYears}
+                  className="font-heading"
                   error={!!errors.marraigeYears}
                   label="عدد سنوات الزواج"
                 >
                   {getMarraigeYearsOptions().map((year, index) => (
-                    <Option key={index}>{year}</Option>
+                    <Option key={index} value={year}>
+                      {year}
+                    </Option>
                   ))}
                 </Select>
                 <ErrorMessage field={errors.marraigeYears} />
@@ -372,17 +380,22 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                 <Typography className="font-heading font-meduim">
                   المدينة
                 </Typography>
+
                 <Select
                   name="city"
                   {...register("city", requiredText)}
+                  value={currentUser?.city}
                   error={!!errors.city}
                   label="المدينة"
                   className="font-heading"
                 >
                   {getCities().map((city, index) => (
-                    <Option key={index}>{city}</Option>
+                    <Option key={index} value={city}>
+                      {city}
+                    </Option>
                   ))}
                 </Select>
+
                 <ErrorMessage field={errors.city} />
               </div>
               <div>
@@ -390,14 +403,17 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
                   المنطقة
                 </Typography>
                 <Select
-                  className="font-heading"
                   name="area"
                   {...register("area", requiredText)}
+                  value={currentUser.area}
+                  className="font-heading"
                   error={!!errors.area}
                   label="المنطقة"
                 >
                   {getBaghdadAreas().map((area, index) => (
-                    <Option key={index}>{area}</Option>
+                    <Option key={index} value={area}>
+                      {area}
+                    </Option>
                   ))}
                 </Select>
                 <ErrorMessage field={errors.area} />
