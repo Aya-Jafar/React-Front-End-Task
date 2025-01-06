@@ -181,7 +181,7 @@ export const FormDrawer = ({ userId, open, setOpen }) => {
           </div>
 
           <form
-            className="flex flex-col gap-6 p-4"
+            className="flex flex-col gap-5 p-4"
             onSubmit={handleSubmit(onSubmit)}
           >
             {/* First Row */}
