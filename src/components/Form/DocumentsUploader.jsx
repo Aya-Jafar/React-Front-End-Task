@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useUsersStore } from "../../stores/users";
 import { Typography } from "@material-tailwind/react";
+import uploadIcon from "../../../public/upload-icon.png";
 
 export const DocumentUploader = ({ userId }) => {
   const store = useUsersStore();
@@ -35,11 +36,7 @@ export const DocumentUploader = ({ userId }) => {
               >
                 <span className="ml-2">{doc.fileName}</span>
                 {!doc.isUploaded ? (
-                  <img
-                    src={"../../../public/upload-icon.png"}
-                    alt="icon"
-                    className="w-[28px]"
-                  />
+                  <img src={uploadIcon} alt="icon" className="w-[28px]" />
                 ) : (
                   // <i className="fa-solid fa-file-arrow-up ml-2"></i>
                   <a href={doc.fileURL} download={doc.fileName}>
