@@ -35,8 +35,9 @@ export const DocumentUploader = ({ userId }) => {
               >
                 <span className="ml-2">{doc.fileName}</span>
                 {!doc.isUploaded ? (
-                  <i className="fa-solid fa-file-arrow-up ml-2"></i>
+                  <img src="src/assets/upload-icon.png" alt="icon" className="w-[28px]"/>
                 ) : (
+                  // <i className="fa-solid fa-file-arrow-up ml-2"></i>
                   <a href={doc.fileURL} download={doc.fileName}>
                     <i class="fa-solid fa-download"></i>
                   </a>

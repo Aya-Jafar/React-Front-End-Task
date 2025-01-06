@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useUsersStore } from "../../stores/users";
-import { Typography } from "@material-tailwind/react";
+import { Typography, Button } from "@material-tailwind/react";
 
 export const AdditionalDocuments = ({ userId }) => {
   const store = useUsersStore();
@@ -50,10 +50,13 @@ export const AdditionalDocuments = ({ userId }) => {
               </div>
             </>
           ))}
-        <i
-          className="fa-solid fa-square-plus fa-xl cursor-pointer px-3 my-3 pb-3"
+
+        <Button
+          className="w-[40px] h-[40px]  cursor-pointer my-3 mx-3 flex items-center justify-center"
           onClick={() => additionalDocumentsInputRef.current?.click()}
-        ></i>
+        >
+          <i class="fa-solid fa-plus fa-2xl"></i>
+        </Button>
 
         <input
           ref={additionalDocumentsInputRef}
